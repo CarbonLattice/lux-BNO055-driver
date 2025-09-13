@@ -156,8 +156,8 @@ void bno055_setCalibrationData(bno055_calibration_data_t calData) {
     memcpy(buffer, &calData.offset.accel, 6);
     memcpy(buffer + 6, &calData.offset.mag, 6);
     memcpy(buffer + 12, &calData.offset.gyro, 6);
-    memcpy(buffer + 18, &calData.radius.accel, 6);
-    memcpy(buffer + 20, &calData.radius.mag, 6);
+    memcpy(buffer + 18, &calData.radius.accel, 2);
+    memcpy(buffer + 20, &calData.radius.mag, 2);
 
 
     for (uint8_t i=0; i < 22; i++) {
