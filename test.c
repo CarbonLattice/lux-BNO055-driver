@@ -19,7 +19,7 @@ int main(void)
 
 
     bno055_setup();
-
+	bno055_setOperationModeNDOF();
 
     bno055_delay(100);
 
@@ -45,6 +45,8 @@ int main(void)
  
     bno055_vector_t quat = bno055_getVectorQuaternion();
     printf("QUAT (w x y z) -> %.6f  %.6f  %.6f  %.6f\n", quat.w, quat.x, quat.y, quat.z);
+
+    sleep(1);
 }
     // done
     bno055_close();
