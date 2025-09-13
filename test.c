@@ -4,6 +4,16 @@
 #include <unistd.h>    
 #include "lux-BNO055.h"
 
+void set_nonblocking(int enable) {
+    int flags = fcntl(STDIN_FILENO, F_GETFL, 0);
+    if (enable)
+        fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK);
+    else
+        fcntl(STDIN_FILENO, F_SETFL, flags & ~O_NONBLOCK);
+}
+
+
+
 int main(void)
 {
 
