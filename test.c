@@ -1,14 +1,14 @@
 // test.c
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>     // usleep
+#include <unistd.h>    
 #include "lux-BNO055.h"
 
 int main(void)
 {
-    // Adjust bus and address if needed:
-    const int i2c_bus = 7;                    // /dev/i2c-1
-    const uint8_t addr = BNO055_I2C_ADDR;     // defined in your header (0x28/0x29)
+
+    const int i2c_bus = 7;                    
+    const uint8_t addr = BNO055_I2C_ADDR;     
 
     if (bno055_linux_init(i2c_bus, addr) < 0) {
         fprintf(stderr, "Failed to initialize I2C bus %d for BNO055 at 0x%02X\n", i2c_bus, addr);
@@ -17,36 +17,35 @@ int main(void)
 
     printf("BNO055: initialized on /dev/i2c-%d addr 0x%02X\n", i2c_bus, addr);
 
-    // Basic setup (reset + configure)
+
     bno055_setup();
 
-    // short pause to let device settle
+
     bno055_delay(100);
 
-    // read chip id=
-
-    // temperature
+    for (int i = 0; i < 100; i++) {
+ 
     int8_t temp = bno055_getTemp();
     printf("TEMP = %d °C\n", temp);
 
-    // self-test
+   
     bno055_self_test_result_t st = bno055_getSelfTestResult();
     printf("SELF TEST -> MCU:%u  GYRO:%u  MAG:%u  ACC:%u\n",
            st.mcuState, st.gyrState, st.magState, st.accState);
 
-    // calibration state
+
     bno055_calibration_state_t cal = bno055_getCalibrationState();
     printf("CALIB STAT -> SYS:%u  GYRO:%u  ACCEL:%u  MAG:%u\n",
            cal.sys, cal.gyro, cal.accel, cal.mag);
 
-    // accelerometer vector
+
     bno055_vector_t accel = bno055_getVectorAccelerometer();
     printf("ACCEL (units) -> X: %.3f  Y: %.3f  Z: %.3f\n", accel.x, accel.y, accel.z);
 
-    // quaternion (if available)
+ 
     bno055_vector_t quat = bno055_getVectorQuaternion();
     printf("QUAT (w x y z) -> %.6f  %.6f  %.6f  %.6f\n", quat.w, quat.x, quat.y, quat.z);
-
+}
     // done
     bno055_close();
     return 0;
