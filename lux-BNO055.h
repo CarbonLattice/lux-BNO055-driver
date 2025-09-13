@@ -346,7 +346,7 @@ bno055_vector_t bno055_getVectorEuler();
 bno055_vector_t bno055_getVectorGravity();
 bno055_vector_t bno055_getVectorQuaternion();
 void bno055_setAxisMap(bno055_axis_map_t axis);
-
+void bno055_setup(void);
 
 
 

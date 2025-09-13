@@ -34,9 +34,9 @@ void bno055_setPage(uint8_t page) {bno055_writeData(BNO055_PAGE_ID, page); }
 
 
 bno055_opmode_t bno055_getOpeationMode() {
-    bno055_opmode_t mode;
+    uint8_t mode;
     bno055_readData(BNO055_OPR_MODE, &mode, 1);
-    return mode;
+    return (bno055_opmode_t)mode;
 }
 
 void bno055_setOperationMode(bno055_opmode_t mode) {
