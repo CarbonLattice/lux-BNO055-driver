@@ -23,31 +23,39 @@ int main(void)
 
     bno055_delay(100);
 
-    for (int i = 0; i < 100; i++) {
+    set_nonblocking(1);
+
+    char ch = 0;
+
+    while (ch != 'q' && ch != 'Q') {
  
-    int8_t temp = bno055_getTemp();
-    printf("TEMP = %d °C\n", temp);
+        int8_t temp = bno055_getTemp();
+        bno055_self_test_result_t st = bno055_getSelfTestResult();    
+        bno055_calibration_state_t cal = bno055_getCalibrationState();
+        bno055_vector_t accel = bno055_getVectorAccelerometer();    
+        bno055_vector_t quat = bno055_getVectorQuaternion();
+
+
+        printf("\033[H\033[J");
+
+        printf("TEMP = %d °C\n", temp);
 
    
-    bno055_self_test_result_t st = bno055_getSelfTestResult();
-    printf("SELF TEST -> MCU:%u  GYRO:%u  MAG:%u  ACC:%u\n",
+        printf("SELF TEST -> MCU:%u  GYRO:%u  MAG:%u  ACC:%u\n",
            st.mcuState, st.gyrState, st.magState, st.accState);
 
-
-    bno055_calibration_state_t cal = bno055_getCalibrationState();
-    printf("CALIB STAT -> SYS:%u  GYRO:%u  ACCEL:%u  MAG:%u\n",
+        printf("CALIB STAT -> SYS:%u  GYRO:%u  ACCEL:%u  MAG:%u\n",
            cal.sys, cal.gyro, cal.accel, cal.mag);
 
+        printf("ACCEL (units) -> X: %.3f  Y: %.3f  Z: %.3f\n", accel.x, accel.y, accel.z);
 
-    bno055_vector_t accel = bno055_getVectorAccelerometer();
-    printf("ACCEL (units) -> X: %.3f  Y: %.3f  Z: %.3f\n", accel.x, accel.y, accel.z);
+        printf("QUAT (w x y z) -> %.6f  %.6f  %.6f  %.6f\n", quat.w, quat.x, quat.y, quat.z);
 
- 
-    bno055_vector_t quat = bno055_getVectorQuaternion();
-    printf("QUAT (w x y z) -> %.6f  %.6f  %.6f  %.6f\n", quat.w, quat.x, quat.y, quat.z);
-
-    sleep(1);
-}
+        fflush(stdout);
+        if (read(STDIN_FILENO, &ch, 1) < 0) {
+            // no input
+        }
+    }   
     // done
     bno055_close();
     return 0;
