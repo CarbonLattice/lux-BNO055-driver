@@ -57,6 +57,7 @@ int main(void)
         }
     }   
     // done
+    set_nonblocking(0);
     bno055_close();
     return 0;
 }
