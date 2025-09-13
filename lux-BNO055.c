@@ -138,8 +138,8 @@ bno055_calibration_data_t bno055_getCalibrationData() {
     memcpy(&calData.offset.accel, buffer, 6);
     memcpy(&calData.offset.mag, buffer + 6, 6);
     memcpy(&calData.offset.gyro, buffer + 12, 6);
-    memcpy(&calData.radius.accel, buffer + 18, 6);
-    memcpy(&calData.radius.mag, buffer + 20, 6);
+    memcpy(&calData.radius.accel, buffer + 18, 2);
+    memcpy(&calData.radius.mag, buffer + 20, 2);
 
     bno055_setOperationMode(operationMode);
 
