@@ -241,6 +241,80 @@ void bno055_setAxisMap(bno055_axis_map_t  axis) {
     bno055_writeData(BNO055_AXIS_MAP_SING, axisMapSign);
 }
 
+static int i2c_fd = -1;
+static uint8_t i2c_addr = 0;
+
+int bno055_linux_init(int bus, uint8_t addr) {
+  char filename[32];
+  snprintf(filename, sizeof(filename), "/dev/i2c-%d", bus);
+
+  i2c_fd = open(filename, O_RDWR);
+  if (i2c_fd < 0) {
+    fprintf(stderr, "bno055: open %s failed: %s\n", filename, strerror(errno));
+    return -1;
+  }
+
+i2c_addr = addr;
+
+if (ioctl(i2c_fd, I2C_SLAVE, addr) < 0) {
+    fprintf(stderr, "bno055: ioctl I2C_SLAVE 0x%02x failed: %s\n", addr, strerror(errno));
+    close(i2c_fd);
+    i2c_fd = -1;
+    return -1;
+  }
+  return 0;
+}
+
+
+void bno055_delay(uint32_t ms) {
+  usleep(ms * 1000u);
+}
+
+void bno055_close(void) {
+  if (i2c_fd >= 0) {
+    close(i2c_fd);
+    i2c_fd = -1;
+  }
+}
+
+void bno055_writeData(uint8_t reg, uint8_t data)
+{
+    if (i2c_fd < 0) {
+        fprintf(stderr, "bno055_writeData: i2c not initialized\n");
+        return;
+    }
+
+    uint8_t out[2] = { reg, data };
+    ssize_t w = write(i2c_fd, out, sizeof(out));
+    if (w != (ssize_t)sizeof(out)) {
+        fprintf(stderr, "bno055_writeData: write failed (w=%zd): %s\n", w, strerror(errno));
+    }
+}
+
+
+void bno055_readData(uint8_t reg, uint8_t *data, uint8_t len)
+{
+    if (i2c_fd < 0) {
+        fprintf(stderr, "bno055_readData: i2c not initialized\n");
+        if (data && len) memset(data, 0, len);
+        return;
+    }
+    if (len == 0) return;
+
+    ssize_t w = write(i2c_fd, &reg, 1);
+    if (w != 1) {
+        fprintf(stderr, "bno055_readData: fallback write(reg) failed (w=%zd): %s\n", w, strerror(errno));
+        memset(data, 0, len);
+        return;
+    }
+
+    ssize_t r = read(i2c_fd, data, len);
+    if (r != (ssize_t)len) {
+        fprintf(stderr, "bno055_readData: read failed (r=%zd, want=%u): %s\n", r, len, strerror(errno));
+        memset(data, 0, len);
+        return;
+    }
+}
 
 
 
