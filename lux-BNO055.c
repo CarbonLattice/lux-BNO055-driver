@@ -6,7 +6,10 @@
 #include <sys/ioctl.h>
 #include <linux/i2c-dev.h>
 #include <lux-BNO055.h>
-
+#include <errno.h>
+#include <string.h>   
+#include <sys/ioctl.h>
+#include <linux/i2c-dev.h>
 
 
 
