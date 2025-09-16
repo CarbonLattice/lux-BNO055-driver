@@ -64,15 +64,15 @@ int main(void)
         //printf("ACCEL (units) -> X: %.3f  Y: %.3f  Z: %.3f\n", accel.x, accel.y, accel.z);
 
         //printf("QUAT (w x y z) -> %.6f  %.6f  %.6f  %.6f\n", quat.w, quat.x, quat.y, quat.z);
-
-        printf("GYRO (dps) -> X: %.3f  Y: %.3f  Z: %.3f\n", gyro.x, gyro.y, gyro.z);
-
         clock_gettime(CLOCK_MONOTONIC, &now);
         if (now.tv_sec - start.tv_sec >= 1) {
             printf("Rate: %lu Hz\n", counter);
             counter = 0;
             start = now;
         }
+        
+        printf("GYRO (dps) -> X: %.3f  Y: %.3f  Z: %.3f\n", gyro.x, gyro.y, gyro.z);
+
 
         fflush(stdout);
         if (read(STDIN_FILENO, &ch, 1) < 0) {
