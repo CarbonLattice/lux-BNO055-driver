@@ -125,8 +125,8 @@
 #define BNO055_GYRP_CONFIG_1 0x0B
 #define BNO055_INT_MSK 0x0
 
-
-
+int bno055_linux_init(int bus, uint8_t addr);
+void bno055_close(void);
 
 
 enum bno055_system_status_t {
@@ -251,7 +251,7 @@ void bno055_setOperationModeConfig();
 void bno055_setOperationModeNDOF();
 void bno055_enableExternalCrystal();
 void bno055_disableExternalCrystal();
-void bno055_setuo();
+void bno055_setup();
 
 int8_t bno055_getTemp();
 
