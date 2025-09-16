@@ -1,3 +1,5 @@
+#define _POSIX_C_SOURCE 200809L
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -7,9 +9,9 @@
 #include <sys/ioctl.h>
 #include <linux/i2c-dev.h>
 #include <string.h>
-//#include <time.h>
-#include <linux/time.h>
-
+#include <time.h>      // for struct timespec, clock_gettime()
+#include <stdint.h>    // for uint8_t, int8_t, etc.
+#include <sys/types.h> // for ssize_t if needed
 
 #define START_BYTE 0xAA
 #define RESPONSE_BYTE 0xBB
