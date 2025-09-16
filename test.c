@@ -76,7 +76,7 @@ int main(void)
         }
 
 
-        printf("GYRO (dps) -> X: %.3f  Y: %.3f  Z: %.3f\n", gyro.x, gyro.y, gyro.z);
+        printf("\rGYRO (dps) -> X: %.3f  Y: %.3f  Z: %.3f", gyro.x, gyro.y, gyro.z);
 
 
         fflush(stdout);
