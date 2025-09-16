@@ -72,7 +72,7 @@ int main(void)
             printf("Rate: %lu Hz\n", counter);
             counter = 0;
             start = now;
-
+        }
 
         fflush(stdout);
         if (read(STDIN_FILENO, &ch, 1) < 0) {

@@ -7,7 +7,7 @@
 #include <sys/ioctl.h>
 #include <linux/i2c-dev.h>
 #include <string.h>
-#include <time.h>
+//#include <time.h>
 #include <linux/time.h>
 
 
