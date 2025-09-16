@@ -16,6 +16,9 @@ void set_nonblocking(int enable) {
 
 int main(void)
 {
+    struct timespec start, now;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    unsigned long counter = 0;
 
     const int i2c_bus = 7;                    
     const uint8_t addr = BNO055_I2C_ADDR;     
@@ -39,27 +42,37 @@ int main(void)
 
     while (ch != 'q' && ch != 'Q') {
  
-        int8_t temp = bno055_getTemp();
-        bno055_self_test_result_t st = bno055_getSelfTestResult();    
-        bno055_calibration_state_t cal = bno055_getCalibrationState();
-        bno055_vector_t accel = bno055_getVectorAccelerometer();    
-        bno055_vector_t quat = bno055_getVectorQuaternion();
-
+        //int8_t temp = bno055_getTemp();
+        //bno055_self_test_result_t st = bno055_getSelfTestResult();    
+        //bno055_calibration_state_t cal = bno055_getCalibrationState();
+        //bno055_vector_t accel = bno055_getVectorAccelerometer();    
+        //bno055_vector_t quat = bno055_getVectorQuaternion();
+        bno055_vector_t gyro = bno055_getVectorGyroscope();
+        
 
         printf("\033[H\033[J");
 
-        printf("TEMP = %d °C\n", temp);
-
+        //printf("TEMP = %d °C\n", temp);
+        counter++;
    
-        printf("SELF TEST -> MCU:%u  GYRO:%u  MAG:%u  ACC:%u\n",
-           st.mcuState, st.gyrState, st.magState, st.accState);
+        //printf("SELF TEST -> MCU:%u  GYRO:%u  MAG:%u  ACC:%u\n",
+          //st.mcuState, st.gyrState, st.magState, st.accState);
 
-        printf("CALIB STAT -> SYS:%u  GYRO:%u  ACCEL:%u  MAG:%u\n",
-           cal.sys, cal.gyro, cal.accel, cal.mag);
+        //printf("CALIB STAT -> SYS:%u  GYRO:%u  ACCEL:%u  MAG:%u\n",
+           //cal.sys, cal.gyro, cal.accel, cal.mag);
 
-        printf("ACCEL (units) -> X: %.3f  Y: %.3f  Z: %.3f\n", accel.x, accel.y, accel.z);
+        //printf("ACCEL (units) -> X: %.3f  Y: %.3f  Z: %.3f\n", accel.x, accel.y, accel.z);
 
-        printf("QUAT (w x y z) -> %.6f  %.6f  %.6f  %.6f\n", quat.w, quat.x, quat.y, quat.z);
+        //printf("QUAT (w x y z) -> %.6f  %.6f  %.6f  %.6f\n", quat.w, quat.x, quat.y, quat.z);
+
+        printf("GYRO (dps) -> X: %.3f  Y: %.3f  Z: %.3f\n", gyro.x, gyro.y, gyro.z);
+
+        clock_gettime(CLOCK_MONOTONIC, &now);
+        if (now.tv_sec - start.tv_sec >= 1) {
+            printf("Rate: %lu Hz\n", counter);
+            counter = 0;
+            start = now;
+
 
         fflush(stdout);
         if (read(STDIN_FILENO, &ch, 1) < 0) {
