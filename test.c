@@ -47,7 +47,7 @@ int main(void)
         //bno055_calibration_state_t cal = bno055_getCalibrationState();
         //bno055_vector_t accel = bno055_getVectorAccelerometer();    
         //bno055_vector_t quat = bno055_getVectorQuaternion();
-        bno055_vector_t gyro = bno055_getVectorGyroscope();
+        bno055_vector_t euler = bno055_getVectorEuler();
         
 
 
@@ -76,7 +76,7 @@ int main(void)
         }
 
 
-        printf("\rGYRO (dps) -> X: %.3f  Y: %.3f  Z: %.3f", gyro.x, gyro.y, gyro.z);
+        printf("\rGYRO (dps) -> X: %.3f  Y: %.3f  Z: %.3f               ", euler.x, euler.y, euler.z);
 
 
         fflush(stdout);
