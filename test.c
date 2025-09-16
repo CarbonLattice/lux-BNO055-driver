@@ -41,7 +41,7 @@ int main(void)
     char ch = 0;
 
     while (ch != 'q' && ch != 'Q') {
- 
+        printf("\033[H\033[J");
         //int8_t temp = bno055_getTemp();
         //bno055_self_test_result_t st = bno055_getSelfTestResult();    
         //bno055_calibration_state_t cal = bno055_getCalibrationState();
@@ -50,7 +50,7 @@ int main(void)
         bno055_vector_t gyro = bno055_getVectorGyroscope();
         
 
-        printf("\033[H\033[J");
+
 
         //printf("TEMP = %d °C\n", temp);
         counter++;
@@ -75,7 +75,7 @@ int main(void)
             start = now;
         }
 
-        
+
         printf("GYRO (dps) -> X: %.3f  Y: %.3f  Z: %.3f\n", gyro.x, gyro.y, gyro.z);
 
 
