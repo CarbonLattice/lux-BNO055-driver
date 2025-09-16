@@ -41,7 +41,7 @@ int main(void)
     char ch = 0;
 
     while (ch != 'q' && ch != 'Q') {
-        printf("\033[H\033[J");
+        //printf("\033[H\033[J");
         //int8_t temp = bno055_getTemp();
         //bno055_self_test_result_t st = bno055_getSelfTestResult();    
         //bno055_calibration_state_t cal = bno055_getCalibrationState();
