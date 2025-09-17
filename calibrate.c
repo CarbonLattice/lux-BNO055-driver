@@ -56,12 +56,14 @@ int main(void)
         printf("CALIB STAT -> SYS:%u  GYRO:%u  ACCEL:%u  MAG:%u\n",
            cal.sys, cal.gyro, cal.accel, cal.mag);
 
+
         if (cal.sys == 3 && cal.gyro == 3 && cal.accel == 3 && cal.mag == 3) {
             printf("FULLY CALIBRATED!\n");
             bno055_saveCalibrationData("bno055.cal");
         } else {
             printf("NOT FULLY CALIBRATED\n");
         }
+
 
 
         fflush(stdout);
