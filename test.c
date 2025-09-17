@@ -1,7 +1,4 @@
-// test.c
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>    
+// test.c 
 #include "lux-BNO055.h"
 
 void set_nonblocking(int enable) {
@@ -36,6 +33,12 @@ int main(void)
 
     bno055_delay(100);
 
+    if (bno055_loadCalibrationData("bno055.cal") == 0) {
+        printf("Loaded calibration data from bno055.cal\n");
+    } else {
+        printf("No calibration data loaded\n");
+    }
+
     set_nonblocking(1);
 
     char ch = 0;
@@ -46,9 +49,9 @@ int main(void)
         //bno055_self_test_result_t st = bno055_getSelfTestResult();    
         //bno055_calibration_state_t cal = bno055_getCalibrationState();
         //bno055_vector_t accel = bno055_getVectorAccelerometer();    
-        //bno055_vector_t quat = bno055_getVectorQuaternion();
-        bno055_vector_t euler = bno055_getVectorEuler();
-        
+        bno055_vector_t quat = bno055_getVectorQuaternion();
+        //bno055_vector_t euler = bno055_getVectorEuler();
+        double yaw = bno055_yawFromQuaternion(quat);
 
 
 
@@ -76,7 +79,8 @@ int main(void)
         }
 
 
-        printf("\rGYRO (dps) -> X: %.3f  Y: %.3f  Z: %.3f               ", euler.x, euler.y, euler.z);
+        printf("\r Quat (dps) -> W: %.3f  X: %.3f  Y: %.3f  Z: %.3f               ", quat.w, quat.x, quat.y, quat.z);
+        printf("\n Yaw: %.2f deg               ", yaw);
 
 
         fflush(stdout);
