@@ -12,7 +12,7 @@
 #include <time.h>      // for struct timespec, clock_gettime()
 #include <stdint.h>    // for uint8_t, int8_t, etc.
 #include <sys/types.h> // for ssize_t if needed
-
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>   
