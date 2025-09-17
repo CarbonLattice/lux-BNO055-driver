@@ -13,6 +13,7 @@ void set_nonblocking(int enable) {
 
 int main(void)
 {
+    const double target_period = 0.01; // 100hz
     struct timespec start, now;
     clock_gettime(CLOCK_MONOTONIC, &start);
     unsigned long counter = 0;
@@ -44,44 +45,32 @@ int main(void)
     char ch = 0;
 
     while (ch != 'q' && ch != 'Q') {
-        //printf("\033[H\033[J");
-        //int8_t temp = bno055_getTemp();
-        //bno055_self_test_result_t st = bno055_getSelfTestResult();    
-        //bno055_calibration_state_t cal = bno055_getCalibrationState();
-        //bno055_vector_t accel = bno055_getVectorAccelerometer();    
+
+        clock_gettime(CLOCK_MONOTONIC, &now);
+        double loop_start = now.tv_sec + now.tv_nsec / 1e9;
+
         bno055_vector_t quat = bno055_getVectorQuaternion();
-        //bno055_vector_t euler = bno055_getVectorEuler();
         double yaw = bno055_yawFromQuaternion(quat);
 
 
 
-        //printf("TEMP = %d °C\n", temp);
+
         counter++;
    
-        //printf("SELF TEST -> MCU:%u  GYRO:%u  MAG:%u  ACC:%u\n",
-          //st.mcuState, st.gyrState, st.magState, st.accState);
-
-        //printf("CALIB STAT -> SYS:%u  GYRO:%u  ACCEL:%u  MAG:%u\n",
-           //cal.sys, cal.gyro, cal.accel, cal.mag);
-
-        //printf("ACCEL (units) -> X: %.3f  Y: %.3f  Z: %.3f\n", accel.x, accel.y, accel.z);
-
-        //printf("QUAT (w x y z) -> %.6f  %.6f  %.6f  %.6f\n", quat.w, quat.x, quat.y, quat.z);
 
         clock_gettime(CLOCK_MONOTONIC, &now);
-        double elapsed = (now.tv_sec - start.tv_sec) +
-                     (now.tv_nsec - start.tv_nsec) / 1e9;
+        double loop_end = now.tv_sec + now.tv_nsec / 1e9;
+        double loop_time = loop_end - loop_start;
 
-        if (elapsed >= 1.0) {
-            printf("Rate: %lu Hz\n", counter);
-            counter = 0;
-            start = now;
+
+        printf("Quat (dps) -> W: %.3f  X: %.3f  Y: %.3f  Z: %.3f               \n", quat.w, quat.x, quat.y, quat.z);
+        printf(" Yaw: %.5f deg               \n", yaw);
+
+
+        double elapsed = target_period - loop_time;
+        if (elapsed > 0) {
+            usleep((useconds_t)(elapsed * 1e6));
         }
-
-
-        printf("Quat (dps) -> W: %.3f  X: %.3f  Y: %.3f  Z: %.3f               ", quat.w, quat.x, quat.y, quat.z);
-        printf(" Yaw: %.5f deg               ", yaw);
-
 
         fflush(stdout);
         if (read(STDIN_FILENO, &ch, 1) < 0) {

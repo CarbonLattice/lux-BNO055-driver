@@ -11,7 +11,8 @@ void set_nonblocking(int enable) {
 
 
 int main(void)
-{
+{   
+    const double target_period = 0.01; // 100hz
     struct timespec start, now;
     clock_gettime(CLOCK_MONOTONIC, &start);
     unsigned long counter = 0;
@@ -37,18 +38,16 @@ int main(void)
     char ch = 0;
 
     while (1) {
-        //printf("\033[H\033[J");
-        //int8_t temp = bno055_getTemp();
+
+        clock_gettime(CLOCK_MONOTONIC, &now);
+        double loop_start = now.tv_sec + now.tv_nsec / 1e9;
+
         bno055_self_test_result_t st = bno055_getSelfTestResult();    
         bno055_calibration_state_t cal = bno055_getCalibrationState();
-        //bno055_vector_t accel = bno055_getVectorAccelerometer();    
-        //bno055_vector_t quat = bno055_getVectorQuaternion();
-        
+
         
 
 
-
-        //printf("TEMP = %d °C\n", temp);
    
         printf("SELF TEST -> MCU:%u  GYRO:%u  MAG:%u  ACC:%u\n",
           st.mcuState, st.gyrState, st.magState, st.accState);
@@ -64,6 +63,16 @@ int main(void)
         } else {
             printf("NOT FULLY CALIBRATED\n");
         }
+
+        clock_gettime(CLOCK_MONOTONIC, &now);
+        double loop_end = now.tv_sec + now.tv_nsec / 1e9;
+        double loop_time = loop_end - loop_start;
+
+        double elapsed = target_period - loop_time;
+        if (elapsed > 0) {
+            usleep((useconds_t)(elapsed * 1e6));
+        }
+
 
 
 
