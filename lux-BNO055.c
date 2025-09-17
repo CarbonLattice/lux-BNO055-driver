@@ -351,7 +351,7 @@ int bno055_saveCalibrationData(const char *path) {
     if (!f) {
         fprintf(stderr, "this shit ant work - hope the error helps %s\n", path, strerror(errno));
         return -2;
-
+    }
 
     size_t written = fwrite(&calData, 1, sizeof(calData), f);
     fclose(f);
