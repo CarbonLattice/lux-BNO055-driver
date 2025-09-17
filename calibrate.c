@@ -36,7 +36,7 @@ int main(void)
 
     char ch = 0;
 
-    while (ch != 'q' && ch != 'Q') {
+    while (1) {
         //printf("\033[H\033[J");
         //int8_t temp = bno055_getTemp();
         bno055_self_test_result_t st = bno055_getSelfTestResult();    
@@ -60,6 +60,7 @@ int main(void)
         if (cal.sys == 3 && cal.gyro == 3 && cal.accel == 3 && cal.mag == 3) {
             printf("FULLY CALIBRATED!\n");
             bno055_saveCalibrationData("bno055.cal");
+            break;
         } else {
             printf("NOT FULLY CALIBRATED\n");
         }

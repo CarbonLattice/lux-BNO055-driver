@@ -79,8 +79,8 @@ int main(void)
         }
 
 
-        printf("\r Quat (dps) -> W: %.3f  X: %.3f  Y: %.3f  Z: %.3f               ", quat.w, quat.x, quat.y, quat.z);
-        printf("\n Yaw: %.2f deg               ", yaw);
+        printf("Quat (dps) -> W: %.3f  X: %.3f  Y: %.3f  Z: %.3f               ", quat.w, quat.x, quat.y, quat.z);
+        printf(" Yaw: %.5f deg               ", yaw);
 
 
         fflush(stdout);
