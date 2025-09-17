@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <linux/i2c-dev.h>
-#include "lux-BNO055.h"
+#include <lux-BNO055.h>
 #include <errno.h>
 #include <string.h>   
 #include <sys/ioctl.h>
@@ -232,6 +232,22 @@ bno055_vector_t bno055_getVectorQuaternion() {
     return bno055_getVector(BNO055_VECTOR_QUATERNION);
 }
 
+double bno055_yawFromQuaternion(bno055_vector_t quat) {
+    // yaw (z-axis rotation)
+    double siny_cosp = 2.0 * (quat.w * quat.z + quat.x * quat.y);
+
+    double cosy_cosp = 1.0 - 2.0 * (quat.y * quat.y + quat.z * quat.z);
+
+    double yaw = atan2(siny_cosp, cosy_cosp);
+
+    double yaw_degrees = yaw * (180.0 / pi);
+    if  (yaw_degrees < 0) {
+        yaw_degrees += 360.0;
+    }
+    return yaw_degrees;
+}
+
+
 
 
 void bno055_setAxisMap(bno055_axis_map_t  axis) {
@@ -319,8 +335,61 @@ void bno055_readData(uint8_t reg, uint8_t *data, uint8_t len)
 
 
 
+int bno055_saveCalibrationData(const char *path) {
+    
 
 
+    bno055_calibration_state_t cal = bno055_getCalibrationState();
+    if (cal.sys < 3 || cal.gyro < 3) {
+        fprintf(stderr, "beno055_saveCalibrationData: not fully calibrated (sys=%u, mag=%u)\n", cal.sys, cal.gyro);
+        return -1;
+    }
+
+    bno055_calibration_data_t calData = bno055_getCalibrationData();
+
+    FILE *f = fopen(path, "wb");
+    if (!f) {
+        fprintf(stderr, "this shit ant work - hope the error helps %s\n", path, strerror(errno));
+        return -2;
+
+
+    size_t written = fwrite(&calData, 1, sizeof(calData), f);
+    fclose(f);
+
+    if (written != sizeof(calData)) {
+        fprintf(stderr , "did not write all of the data\n");
+        return -3;
+
+    } 
+    return 0;
+}
+
+
+int bno055_loadCalibrationData(const char *path) {
+    
+    FILE *f = fopen(path, "rb");
+    if (!f) {
+        fprintf(stderr, "this shit ant work - hope the error helps  %s:  %s\n", path, strerror(errno));
+        return -1;
+    }
+
+    bno055_calibration_data_t data;
+
+    size_t read = fread(&data, 1, sizeof(data), f);
+    fclose(f);
+
+    if (read != sizeof(data)) {
+        fprintf(stderr , "this is prob not the right file, or it has been coruped try again\n");
+        return -2;
+
+    } 
+
+    bno055_setCalibrationData(data);
+    
+    bno055_delay(50);
+
+    return 0;
+}
 
 
 

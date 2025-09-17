@@ -13,6 +13,15 @@
 #include <stdint.h>    // for uint8_t, int8_t, etc.
 #include <sys/types.h> // for ssize_t if needed
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>   
+
+#define pi 3.14159265f
+#define _2pi 6.2831853f
+
+
+
 #define START_BYTE 0xAA
 #define RESPONSE_BYTE 0xBB
 #define ERROR_BYTE 0xEE
@@ -125,8 +134,8 @@
 #define BNO055_GYRP_CONFIG_1 0x0B
 #define BNO055_INT_MSK 0x0
 
-int bno055_linux_init(int bus, uint8_t addr);
-void bno055_close(void);
+
+
 
 
 enum bno055_system_status_t {
@@ -251,7 +260,7 @@ void bno055_setOperationModeConfig();
 void bno055_setOperationModeNDOF();
 void bno055_enableExternalCrystal();
 void bno055_disableExternalCrystal();
-void bno055_setup();
+void bno055_setuo();
 
 int8_t bno055_getTemp();
 
@@ -262,6 +271,9 @@ bno055_self_test_result_t bno055_getSelfTestResult();
 bno055_calibration_state_t bno055_getCalibrationState();
 bno055_calibration_data_t bno055_getCalibrationData();
 void bno055_setCalibrationData(bno055_calibration_data_t calData);
+int bno055_saveCalibrationData(const char *path);
+int bno055_loadCalibrationData(const char *path);
+
 
 bno055_vector_t bno055_getVectorAccelerometer();
 bno055_vector_t bno055_getVectorMagetometer();
@@ -269,6 +281,8 @@ bno055_vector_t bno055_getVectorGyroscope();
 bno055_vector_t bno055_getVectorEuler();
 bno055_vector_t bno055_getVectorGravity();
 bno055_vector_t bno055_getVectorQuaternion();
+double bno055_yawFromQuaternion(bno055_vector_t quat);
+
 void bno055_setAxisMap(bno055_axis_map_t axis);
 void bno055_setup(void);
 
