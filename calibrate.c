@@ -1,4 +1,5 @@
 #include "lux-BNO055.h"
+#include <stdlib.h>
 
 void set_nonblocking(int enable) {
     int flags = fcntl(STDIN_FILENO, F_GETFL, 0);
@@ -22,6 +23,7 @@ int main(void)
 
     if (bno055_linux_init(i2c_bus, addr) < 0) {
         fprintf(stderr, "Failed to initialize I2C bus %d for BNO055 at 0x%02X\n", i2c_bus, addr);
+        exit(1);
         return 1;
     }
 
@@ -37,7 +39,7 @@ int main(void)
 
     char ch = 0;
 
-    while (1) {
+    while (ch != 'q' && ch != 'Q') {
 
         clock_gettime(CLOCK_MONOTONIC, &now);
         double loop_start = now.tv_sec + now.tv_nsec / 1e9;
@@ -83,6 +85,6 @@ int main(void)
     }   
     // done
     set_nonblocking(0);
-    bno055_close();
+    bno055_reset();
     return 0;
 }
