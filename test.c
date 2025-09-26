@@ -24,7 +24,7 @@ int main(void)
 
     if (bno055_linux_init(i2c_bus, addr) < 0) {
         fprintf(stderr, "Failed to initialize I2C bus %d for BNO055 at 0x%02X\n", i2c_bus, addr);
-        exit(1);
+        //exit(1);
         return 1;
     }
 
